@@ -26,9 +26,39 @@ const std::vector<std::string>& Restaurant::getMenu() const {
 }
 
 std::ostream& operator<<(std::ostream& outputStream, const Restaurant& restaurant) {
+    outputStream << restaurant.id << '#' << restaurant.name << '#' << restaurant.cuisine << '#' << restaurant.menuItems.size();
+    for (const auto& item : restaurant.menuItems) {
+        outputStream << '#' << item;
+    }
     return outputStream;
 }
 
 std::istream& operator>>(std::istream& inputStream, Restaurant& restaraunt) {
-    return inputStream;
+    std::string rawLine;
+    std::stringstream lineStream(rawLine);
+    std::string field; 
+    int itemCount; 
+
+    restaraunt.menuItems.clear(); // to prevent mixup of old and new menu items. 
+
+    if(!getline(inputStream, rawLine)) {
+        return inputStream;
+    }
+
+    getline(lineStream, field, '#'); // extract id
+    restaraunt.id = stoi(field);
+
+    getline(lineStream, restaraunt.name, '#'); // extract name and cuisine.
+    getline(lineStream, restaraunt.cuisine, '#');
+
+    getline(lineStream, field, '#');
+    itemCount = stoi(field); 
+
+    for (int i = 0; i < itemCount; ++i) {
+        if (!getline(lineStream, field, '#')) {
+            return inputStream; 
+        }
+        restaraunt.menuItems.push_back(field); 
+    }
+    return inputStream; 
 }

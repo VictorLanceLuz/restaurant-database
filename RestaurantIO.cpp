@@ -13,6 +13,53 @@ void addRestaurant(std::vector<Restaurant>& database) {
     std::string restaurantName;
     std::string cuisineType;
 
+    std::cout << "Enter restaurant ID: ";
+    std::cin >> restaurantId;  
+    if (std::cin.fail()) {
+        std::cin.clear();
+        std::cin.ignore(1000, '\n');
+        std::cout << "Invalid input.\n";
+        return;
+    }
+
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // discard leftover newline
+
+    std::cout << "Enter restaurant name: ";
+    std::getline(std::cin, restaurantName);
+    std::cout << "Enter cuisine type: ";
+    std::getline(std::cin, cuisineType);
+
+    Restaurant restaurant(restaurantId, restaurantName, cuisineType);
+
+    std::cout << "Enter the number of menu items: ";
+    std::cin >> menuItemCount;
+    if (std::cin.fail() || menuItemCount < 0) {
+        std::cin.clear();
+        std::cin.ignore(1000, '\n');
+        std::cout << "Invalid number.\n";
+        return;
+    }
+
+    for (int i = 0; i < menuItemCount; ++i) {
+        std::cout << "Enter item " << (i + 1) << " name: ";
+        std::string itemName;
+        std::getline(std::cin, itemName); 
+        
+        std::cout << "Enter item " << (i + 1) << " price: ";
+        double itemPrice;
+        std::cin >> itemPrice; 
+        if (std::cin.fail() || itemPrice < 0) {
+            std::cin.clear();
+            std::cin.ignore(1000, '\n');
+            std::cout << "Invalid price.\n";
+            return;
+        }
+
+        std::stringstream itemEntryStream; 
+        itemEntryStream << std::fixed << std::setprecision(2);
+        itemEntryStream << itemName << " " << itemPrice; 
+    }
+
     database.push_back(restaurant); 
 }
 
@@ -34,5 +81,5 @@ bool loadDatabase(std::vector<Restaurant>& database, const std::string& filename
 }
 
 void saveDatabase(const std::vector<Restaurant>& database, const std::string& filename) {
-    
+
 }
