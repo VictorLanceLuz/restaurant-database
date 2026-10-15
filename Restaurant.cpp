@@ -35,7 +35,6 @@ std::ostream& operator<<(std::ostream& outputStream, const Restaurant& restauran
 
 std::istream& operator>>(std::istream& inputStream, Restaurant& restaraunt) {
     std::string rawLine;
-    std::stringstream lineStream(rawLine);
     std::string field; 
     int itemCount; 
 
@@ -44,6 +43,7 @@ std::istream& operator>>(std::istream& inputStream, Restaurant& restaraunt) {
     if(!getline(inputStream, rawLine)) {
         return inputStream;
     }
+    std::stringstream lineStream(rawLine);
 
     getline(lineStream, field, '#'); // extract id
     restaraunt.id = stoi(field);

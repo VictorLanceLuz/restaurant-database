@@ -43,6 +43,7 @@ void addRestaurant(std::vector<Restaurant>& database) {
     for (int i = 0; i < menuItemCount; ++i) {
         std::cout << "Enter item " << (i + 1) << " name: ";
         std::string itemName;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // remove buffer.
         std::getline(std::cin, itemName); 
         
         std::cout << "Enter item " << (i + 1) << " price: ";
@@ -58,6 +59,7 @@ void addRestaurant(std::vector<Restaurant>& database) {
         std::stringstream itemEntryStream; 
         itemEntryStream << std::fixed << std::setprecision(2);
         itemEntryStream << itemName << " " << itemPrice; 
+        restaurant.addMenuItem(itemEntryStream.str()); 
     }
 
     database.push_back(restaurant); 
@@ -78,8 +80,25 @@ void displayRestaurants(const std::vector<Restaurant>& database) {
 bool loadDatabase(std::vector<Restaurant>& database, const std::string& filename) {
     std::ifstream inputFile(filename);
     Restaurant restaurant; 
+    if (inputFile.is_open()) {
+        while (inputFile >> restaurant) {
+            database.push_back(restaurant); 
+        }
+        return true; 
+    } else {
+        std::cerr << "[WARN] Could not open " << filename << " for reading.\n";
+        return false;
+    }
 }
 
 void saveDatabase(const std::vector<Restaurant>& database, const std::string& filename) {
-
+    std::ofstream outputFile(filename);
+    if (outputFile.is_open()) {
+        for (const auto& restaurant : database) {
+            outputFile << restaurant << std::endl;
+        }
+        outputFile.close();
+    } else {
+        std::cerr << "[ERR] Could not open " << filename << " for writing.\n";
+    }
 }
